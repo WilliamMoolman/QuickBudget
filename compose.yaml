@@ -1,0 +1,59 @@
+version: '3'
+services:
+  flask:
+    build:
+      context: src/backend
+      dockerfile: Dockerfile
+    container_name: flask
+    image: quickbudget:backend
+    environment:
+      APP_PORT: 5000
+      MONGO_URI: mongodb://mongodb:27017/quickbudget
+    depends_on:
+      - mongodb
+    ports:
+      - "5000:5000" # To remove in prod
+    networks:
+      - frontend
+      - backend
+
+  mongodb:
+    image: mongo:4.0.8
+    container_name: mongodb
+    environment:
+      MONGODB_DATA_DIR: /data/db
+      MONDODB_LOG_DIR: /dev/null
+    volumes:
+      - mongodbdata:/data/db
+    ports:
+      - "27017:27017" # To remove in prod
+    networks:
+      - backend
+
+  streamlit:
+    build:
+      context: src/frontend
+      dockerfile: Dockerfile
+    image: quickbudget:frontend
+    container_name: streamlit
+    environment:
+      APP_ENV: "prod"
+      APP_NAME: "streamlit"
+      APP_DEBUG: "true"
+      SERVICE_NAME: "streamlit"
+    ports:
+      - "8501:8501"
+    depends_on:
+      - flask
+    networks:
+      - frontend
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
+
+volumes:
+  mongodbdata:
+    driver: local
