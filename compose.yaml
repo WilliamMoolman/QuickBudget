@@ -41,6 +41,8 @@ services:
       APP_NAME: "streamlit"
       APP_DEBUG: "true"
       SERVICE_NAME: "streamlit"
+    volumes:
+      - ./src/frontend/pages:/app/pages
     ports:
       - "8501:8501"
     depends_on:

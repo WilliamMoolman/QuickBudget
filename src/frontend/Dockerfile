@@ -4,8 +4,9 @@ FROM python:3.12
 # Install streamlit and st_pages
 RUN pip install streamlit st_pages
 
+
 # Copy the app
-COPY . /app
+COPY app.py /app/app.py
 
 # Set working directory
 WORKDIR /app
