@@ -2,14 +2,16 @@ from mongoengine import *
 import os
 import pandas as pd
 import logging
+from models import Account, Transaction
 
-logger = logging.getLogger('qb.backend')
-
+logger = logging.getLogger("qb.backend")
 
 
 class Database:
-    def __init__(self):
-        connect(host=os.getenv("MONGO_URI"))
+    def __init__(self, mongo_uri=None):
+        if mongo_uri is None:
+            mongo_uri = os.getenv("MONGO_URI")
+        connect(host=mongo_uri)
         logger.info("Connected to database")
 
     def get_accounts(self):
@@ -30,35 +32,11 @@ class Database:
     def add_transaction(self, transaction):
         return transaction.save()
 
-class Transaction(Document):
-    date = DateTimeField()
-    description = StringField()
-    amount_c = IntField()
-    account = StringField()
-    category = StringField()
-    notes = StringField()
+    def add_account(self, account):
+        return account.save()
 
-    def as_dict(self):
-        return {
-            "date": self.date.strftime("%Y-%m-%d %H:%M:%S"),
-            "description": self.description,
-            "amount_c": self.amount_c,
-            "account": self.account,
-            "category": self.category,
-            "notes": self.notes,
-        }
+    def get_accounts(self):
+        return Account.objects
 
-
-
-class Account(Document):
-    name = StringField()
-    balance = IntField()
-    transaction_headers = ListField(StringField())
-
-    def load_transactions(self, transactions: pd.DataFrame):
-        transactions_with_headers = transactions.set_axis(
-            self.transaction_headers, axis=1
-        )
-        for transaction in transactions_with_headers.to_dict(orient="records"):
-            Transaction(**transaction).save()
-
+    def delete_account(self, account):
+        return account.delete()
