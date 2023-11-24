@@ -1,0 +1,18 @@
+
+### Get Index
+GET http://localhost:8000/
+
+### Add Account
+POST http://localhost:8000/accounts
+Content-Type: application/json
+
+{
+    "name": "Savings Account",
+    "balance": 1000
+}
+
+### Get Accounts
+GET http://localhost:8000/accounts
+
+### Get Account
+GET http://localhost:8000/accounts/7
