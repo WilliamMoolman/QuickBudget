@@ -3,7 +3,7 @@ use diesel::prelude::*;
 extern crate rocket;
 use rocket::serde::{Deserialize, Serialize};
 
-#[derive(Queryable, Selectable, Serialize)]
+#[derive(Queryable, Selectable, Serialize, Deserialize, AsChangeset)]
 #[serde(crate = "rocket::serde")]
 #[diesel(table_name = crate::schema::accounts)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
