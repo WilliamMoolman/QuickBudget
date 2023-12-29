@@ -59,6 +59,12 @@ def create_app():
         db.add_transactions(transactions)
         return jsonify_mongo([transaction.as_dict() for transaction in transactions])
 
+    @app.route("/account/<account_id>", methods=["DELETE"])
+    def delete_account(account_id):
+        account = db.get_account(account_id)
+        db.delete_account(account)
+        return jsonify_mongo(account.as_dict())
+
     return app
 
 

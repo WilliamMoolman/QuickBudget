@@ -2,7 +2,7 @@ from mongoengine import *
 import os
 import pandas as pd
 import logging
-from models import Account, Transaction
+from models import Account, Transaction, Statement
 
 logger = logging.getLogger("qb.backend")
 
@@ -19,6 +19,9 @@ class Database:
 
     def get_account(self, account_id):
         return Account.objects(id=account_id).first()
+
+    def delete_account(self, account):
+        return account.delete()
 
     def get_transactions(self):
         return Transaction.objects
